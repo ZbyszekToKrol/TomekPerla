@@ -211,6 +211,8 @@ function setImage(image) {
   document.querySelector(".id_own_image").style.backgroundImage =
     `url(${image})`;
 }
+window.addEventListener("DOMContentLoaded", loadImage);
+
 
 function setData(id, value) {
   document.getElementById(id).innerHTML = value;
