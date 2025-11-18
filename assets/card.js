@@ -194,12 +194,15 @@ function loadImage() {
   const imageParam = params.get("image");
   if (!imageParam) return;
 
-  const imageUrl = decodeURIComponent(imageParam);
+  let imageUrl = decodeURIComponent(imageParam);
 
-  // Set background image directly
+  // Ensure it starts with https://
+  if (!imageUrl.startsWith("http")) {
+    imageUrl = "https://" + imageUrl;
+  }
+
+  console.log("Setting image:", imageUrl); // debug
   setImage(imageUrl);
-
-  // Optional: store in IndexedDB
 
 }
 
