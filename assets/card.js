@@ -188,36 +188,24 @@ async function loadImage() {
   var db = await getDb();
   var image = await getData(db, "image");
 
-  if (image) {
+  // jeśli mamy zapisany obraz w IndexedDB -> ustaw go
+  if (image && image.image) {
     setImage(image.image);
   }
 
-  console.log(params.get("image"));
-  fetch(params.get("image"), {
-    method: "GET",
-    headers: {
-      Authorization: "Client-ID e4d98a899c8c946",
-    },
-  })
-    .then((response) => response.blob())
-    .then((result) => {
-      var reader = new FileReader();
-      reader.readAsDataURL(result);
-      reader.onload = (event) => {
-        var base = event.target.result;
+  const url = params.get("image");
 
-        if (base !== image) {
-          setImage(base);
+  // jeśli URL istnieje i jest inny niż ten zapisany — zapisz go
+  if (url && (!image || image.image !== url)) {
+    setImage(url);
 
-          var data = {
-            data: "image",
-            image: base,
-          };
+    let data = {
+      data: "image",
+      image: url
+    };
 
-          saveData(db, data);
-        }
-      };
-    });
+    saveData(db, data);
+  }
 }
 
 function setImage(image) {
