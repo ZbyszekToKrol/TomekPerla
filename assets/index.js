@@ -24,74 +24,50 @@ document.querySelectorAll(".selector_option").forEach((option) => {
 
 var upload = document.querySelector(".upload");
 
+// === REPLACED IMAGE UPLOAD SECTION (ImgBB) ===
 var imageInput = document.createElement("input");
 imageInput.type = "file";
 imageInput.accept = ".jpeg,.png,.gif";
 
-document.querySelectorAll(".input_holder").forEach((element) => {
-  var input = element.querySelector(".input");
-  input.addEventListener("click", () => {
-    element.classList.remove("error_shown");
-  });
+upload.addEventListener('click', () => {
+    imageInput.value = ""; // reset so user can reselect
+    upload.classList.remove("error_shown");
+    imageInput.click();
 });
 
-upload.addEventListener("click", () => {
-  imageInput.click();
-  upload.classList.remove("error_shown");
-});
+imageInput.addEventListener('change', async () => {
+    if (!imageInput.files.length) return;
 
-imageInput.addEventListener("change", (event) => {
-  upload.classList.remove("upload_loaded");
-  upload.classList.add("upload_loading");
+    upload.classList.remove("upload_loaded");
+    upload.classList.add("upload_loading");
+    upload.removeAttribute("selected");
 
-  upload.removeAttribute("selected");
+    const file = imageInput.files[0];
+    const data = new FormData();
+    data.append("image", file);
 
-  var file = imageInput.files[0];
-  var data = new FormData();
-  data.append("image", file);
+    try {
+        const res = await fetch("https://api.imgbb.com/1/upload?key=3ce694dd7f69674eb247303ce0de3402", {
+            method: "POST",
+            body: data
+        });
+        const response = await res.json();
 
-  fetch("	https://api.imgur.com/3/image", {
-    method: "POST",
-    headers: {
-      Authorization: "Client-ID e4d98a899c8c946",
-    },
-    body: data,
-  })
-    .then((result) => result.json())
-    .then((response) => {
-      var url = response.data.link;
-      upload.classList.remove("error_shown");
-      upload.setAttribute("selected", url);
-      upload.classList.add("upload_loaded");
-      upload.classList.remove("upload_loading");
-      upload.querySelector(".upload_uploaded").src = url;
-    });
-});
+        if (!response.success) throw new Error("Upload failed");
 
-document.querySelector(".go").addEventListener("click", () => {
-  var empty = [];
+        const url = response.data.url;
 
-  var params = new URLSearchParams();
-
-  params.set("sex", sex);
-  if (!upload.hasAttribute("selected")) {
-    empty.push(upload);
-    upload.classList.add("error_shown");
-  } else {
-    params.set("image", upload.getAttribute("selected"));
-  }
-
-  const day = document.getElementById("day");
-  const month = document.getElementById("month");
-  const year = document.getElementById("year");
-
-  [day, month, year].forEach((input) => {
-    if (isEmpty(input.value)) {
-      dateEmpty = true;
-    } else {
-      params.set(input.id, input.value);
+        upload.classList.remove("upload_loading");
+        upload.classList.add("upload_loaded");
+        upload.querySelector(".upload_uploaded").src = url;
+        upload.setAttribute("selected", url);
+    } catch (err) {
+        console.error(err);
+        upload.classList.remove("upload_loading");
+        upload.classList.add("error_shown");
     }
-  });
+});
+// === END IMAGE UPLOAD REPLACEMENT ===
 
   document.querySelectorAll(".input_holder").forEach((element) => {
     var input = element.querySelector(".input");
@@ -128,3 +104,4 @@ guide.addEventListener("click", () => {
     guide.classList.add("unfolded");
   }
 });
+
