@@ -135,7 +135,7 @@ document.querySelector(".go").addEventListener('click', () => {
 
 function forwardToId(params){
 
-location.href = "/szpeloza/id?" + params
+location.href = "/TomekPerla/id?" + params
 
 
 }
@@ -146,4 +146,5 @@ guide.addEventListener('click', () => {
     guide.classList.toggle("unfolded");
 
 })
+
 
