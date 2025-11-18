@@ -84,7 +84,7 @@ imageInput.addEventListener('change', async () => {
     empty[0].scrollIntoView();
   } else {
     forwardToId(params);
-  });
+  };
 
 function isEmpty(value) {
   let pattern = /^\s*$/;
@@ -103,5 +103,6 @@ guide.addEventListener("click", () => {
     guide.classList.add("unfolded");
   }
 });
+
 
 
