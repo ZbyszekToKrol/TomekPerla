@@ -51,18 +51,13 @@ function loadReadyData(result) {
 
   const birthdayDate = new Date();
 
-if (result["birthday"]) {
-  const [d, m, y] = result["birthday"].split(".");
-  birthdayDate = new Date(`${y}-${m}-${d}`);
-} else {
   birthdayDate.setFullYear(result["year"], result["month"] - 1, result["day"]);
-}
 
   var sex = result["sex"];
 
-let day = birthdayDate.getDate();        // 1–31
-let month = birthdayDate.getMonth() + 1; // 1–12
-let year = birthdayDate.getFullYear();
+  let day = birthdayDate.getDay();
+  let month = birthdayDate.getMonth();
+  let year = birthdayDate.getFullYear();
 
   var textSex;
   if (sex === "m") {
@@ -193,24 +188,36 @@ async function loadImage() {
   var db = await getDb();
   var image = await getData(db, "image");
 
-  // jeśli mamy zapisany obraz w IndexedDB -> ustaw go
-  if (image && image.image) {
+  if (image) {
     setImage(image.image);
   }
 
-  const url = params.get("image");
+  console.log(params.get("image"));
+  fetch(params.get("image"), {
+    method: "GET",
+    headers: {
+      Authorization: "Client-ID e4d98a899c8c946",
+    },
+  })
+    .then((response) => response.blob())
+    .then((result) => {
+      var reader = new FileReader();
+      reader.readAsDataURL(result);
+      reader.onload = (event) => {
+        var base = event.target.result;
 
-  // jeśli URL istnieje i jest inny niż ten zapisany — zapisz go
-  if (url && (!image || image.image !== url)) {
-    setImage(url);
+        if (base !== image) {
+          setImage(base);
 
-    let data = {
-      data: "image",
-      image: url
-    };
+          var data = {
+            data: "image",
+            image: base,
+          };
 
-    saveData(db, data);
-  }
+          saveData(db, data);
+        }
+      };
+    });
 }
 
 function setImage(image) {
