@@ -51,7 +51,12 @@ function loadReadyData(result) {
 
   const birthdayDate = new Date();
 
+if (result["birthday"]) {
+  const [d, m, y] = result["birthday"].split(".");
+  birthdayDate = new Date(`${y}-${m}-${d}`);
+} else {
   birthdayDate.setFullYear(result["year"], result["month"] - 1, result["day"]);
+}
 
   var sex = result["sex"];
 
