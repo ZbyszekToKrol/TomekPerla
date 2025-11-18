@@ -190,41 +190,17 @@ async function loadData() {
   }
 }
 
-loadImage();
-async function loadImage() {
-  var db = await getDb();
-  var image = await getData(db, "image");
+function loadImage() {
+  const imageParam = params.get("image");
+  if (!imageParam) return;
 
-  if (image) {
-    setImage(image.image);
-  }
+  const imageUrl = decodeURIComponent(imageParam);
 
-  console.log(params.get("image"));
-  fetch(params.get("image"), {
-    method: "GET",
-    headers: {
-      Authorization: "Client-ID e4d98a899c8c946",
-    },
-  })
-    .then((response) => response.blob())
-    .then((result) => {
-      var reader = new FileReader();
-      reader.readAsDataURL(result);
-      reader.onload = (event) => {
-        var base = event.target.result;
+  // Set background image directly
+  setImage(imageUrl);
 
-        if (base !== image) {
-          setImage(base);
+  // Optional: store in IndexedDB
 
-          var data = {
-            data: "image",
-            image: base,
-          };
-
-          saveData(db, data);
-        }
-      };
-    });
 }
 
 function setImage(image) {
