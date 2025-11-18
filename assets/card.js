@@ -194,16 +194,17 @@ function loadImage() {
   const imageParam = params.get("image");
   if (!imageParam) return;
 
-  let imageUrl = decodeURIComponent(imageParam);
+  const imageUrl = decodeURIComponent(imageParam);
 
-  // Ensure it starts with https://
-  if (!imageUrl.startsWith("http")) {
-    imageUrl = "https://" + imageUrl;
-  }
-
-  console.log("Setting image:", imageUrl); // debug
+  console.log("Setting image:", imageUrl); // debug in console
   setImage(imageUrl);
+}
 
+function setImage(image) {
+  const el = document.querySelector(".id_own_image");
+  if (!el) return;
+
+  el.style.backgroundImage = `url('${image}')`;
 }
 
 function setImage(image) {
