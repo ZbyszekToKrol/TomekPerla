@@ -49,10 +49,17 @@ function loadReadyData(result) {
     result[key] = htmlEncode(result[key]);
   });
 
-  const birthdayDate = new Date();
+let birthdayDate;
+if (result["birthday"]) {
+  const parts = result["birthday"].split(".");
+  const day = parseInt(parts[0]);
+  const month = parseInt(parts[1]); // 1-12
+  const year = parseInt(parts[2]);
 
-  birthdayDate.setFullYear(result["year"], result["month"] - 1, result["day"]);
-
+  birthdayDate = new Date(year, month - 1, day);
+} else {
+  birthdayDate = new Date(); // fallback
+}
   var sex = result["sex"];
 
   let day = birthdayDate.getDay();
