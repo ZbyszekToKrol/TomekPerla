@@ -18,7 +18,7 @@ window.onload = async () => {
   ];
 
   pages.forEach((page) => {
-    files.push("/" + page + "?" + params);
+    files.push("/TomekPerla/" + page + "?" + params);
   });
 
   files.push(params.get("image"));
