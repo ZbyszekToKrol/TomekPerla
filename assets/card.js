@@ -55,9 +55,9 @@ function loadReadyData(result) {
 
   var sex = result["sex"];
 
-  let day = birthdayDate.getDay();
-  let month = birthdayDate.getMonth();
-  let year = birthdayDate.getFullYear();
+let day = birthdayDate.getDate();        // 1–31
+let month = birthdayDate.getMonth() + 1; // 1–12
+let year = birthdayDate.getFullYear();
 
   var textSex;
   if (sex === "m") {
